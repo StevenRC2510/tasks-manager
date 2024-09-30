@@ -1,0 +1,10 @@
+<app-navbar (toggleDrawer)="toggleDrawer()"></app-navbar>
+<div class="flex">
+  <app-sidebar
+    class="hidden md:block md:w-1/4 lg:w-1/5"
+    [isDrawerOpen]="isDrawerOpen"
+  ></app-sidebar>
+  <div class="flex-1 p-4">
+    <ng-content></ng-content>
+  </div>
+</div>

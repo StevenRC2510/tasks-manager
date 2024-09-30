@@ -1,0 +1,52 @@
+<div *ngIf="hasTasks$ | async; else emptyState">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div *ngFor="let task of tasks$ | async; let i = index">
+      <div
+        class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800"
+      >
+        <img
+          class="rounded-t-lg"
+          src="https://img.freepik.com/free-vector/hand-drawn-business-planning-with-task-list_23-2149164275.jpg?t=st=1727662646~exp=1727666246~hmac=366197ada9a8442079080ff6d885214597de57f56aa107817e41b15751538d19&w=1380"
+          alt=""
+        />
+        <div class="p-5">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">
+            {{ task.task_name }} - {{ task.deadline }}
+          </h5>
+          <p class="mb-3 font-bold text-white">Associated persons</p>
+          <div *ngFor="let person of task.persons">
+            <p class="mt-3 font-bold text-white">
+              • {{ person.full_name }} ({{ person.age }})
+            </p>
+            <p class="mt-3 font-normal text-white">Skills</p>
+            <div *ngFor="let skill of person.skills">
+              <p class="mt-3 font-bold text-white">• {{ skill }}</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-3">
+            <app-tag
+              [type]="getTaskStatus(task.status).type"
+              [title]="getTaskStatus(task.status).title"
+            ></app-tag>
+            <app-button
+              *ngIf="isPendingStatus(task.status)"
+              label="Complete task"
+              [type]="ButtonType.SUCCESS"
+              (clickAction)="completeTask.emit(i)"
+            ></app-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <div class="flex flex-col justify-center items-center">
+    <img
+      class="w-2/4 h-2/4 items-center"
+      src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-616.jpg?w=1060&t=st=1727661423~exp=1727662023~hmac=65eba25a91661ae9237e3528be13355e2c19e20bcc59e16c902ffc3444b37b07"
+      alt="Empty state"
+    />
+  </div>
+</ng-template>

@@ -1,0 +1,167 @@
+<app-modal
+  title="Create new task"
+  [isModalOpen]="isOpenModalCreateTask"
+  (cancelAction)="toggleModalCreateTask.emit()"
+>
+  <form modal-body [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <div
+      class="grid gap-6 mb-6 md:grid-cols-2 p-6 bg-gray-100 border border-gray-200 rounded-lg shadow mt-4"
+    >
+      <div>
+        <label for="task_name" class="block mb-2 text-sm font-bold text-black"
+          >Task name</label
+        >
+        <input
+          type="text"
+          id="task_name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          formControlName="task_name"
+          placeholder="Enter task name"
+          required
+        />
+        <div
+          *ngIf="
+            taskForm.get('task_name')?.invalid &&
+            taskForm.get('task_name')?.touched
+          "
+        >
+          <small class="text-red-600">The task name is required.</small>
+        </div>
+      </div>
+
+      <div>
+        <label for="deadline" class="block mb-2 text-sm font-bold text-black"
+          >Deadline</label
+        >
+        <input
+          id="deadline"
+          type="date"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          formControlName="deadline"
+        />
+        <div
+          *ngIf="
+            taskForm.get('deadline')?.invalid &&
+            taskForm.get('deadline')?.touched
+          "
+        >
+          <small class="text-red-600">The deadline is required.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- List of persons -->
+    <div formArrayName="persons">
+      <h3 class="text-white font-bold text-xl">Associated people</h3>
+      <div
+        class="p-6 bg-gray-100 border border-gray-200 rounded-lg shadow mt-4"
+        *ngFor="let person of persons.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <p class="text-black font-bold text-l mb-2">Person {{ i + 1 }}</p>
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <label
+              for="full_name"
+              class="block mb-2 text-sm font-bold text-black"
+              >Full name</label
+            >
+            <input
+              id="full_name"
+              formControlName="full_name"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Enter full name"
+            />
+            <div
+              *ngIf="
+                person.get('full_name')?.invalid &&
+                person.get('full_name')?.touched
+              "
+            >
+              <small class="text-red-600"
+                >Full name is required and must be at least 5 characters
+                long.</small
+              >
+            </div>
+          </div>
+          <div>
+            <label for="age" class="block mb-2 text-sm font-bold text-black"
+              >Age</label
+            >
+            <input
+              id="age"
+              type="number"
+              formControlName="age"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Enter age"
+            />
+            <div
+              *ngIf="person.get('age')?.invalid && person.get('age')?.touched"
+            >
+              <small class="text-red-600"
+                >The age is required and must be over 18 years old.</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- List of skills -->
+        <div formArrayName="skills">
+          <div
+            class="flex items-end gap-2"
+            *ngFor="let skill of getSkills(i).controls; let j = index"
+          >
+            <div class="w-full mt-4">
+              <label for="skill" class="block mb-2 text-sm font-bold text-black"
+                >Skill {{ j + 1 }}</label
+              >
+              <input
+                [formControlName]="j"
+                id="skill"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter skill"
+              />
+              <div *ngIf="skill.invalid && skill.touched">
+                <small class="text-red-600">The skill is required.</small>
+              </div>
+            </div>
+
+            <app-button
+              label="Remove"
+              [type]="ButtonType.ERROR"
+              (clickAction)="removeSkill(i, j)"
+            ></app-button>
+          </div>
+          <div class="flex justify-end pt-6">
+            <app-button
+              label="Add skill"
+              [type]="ButtonType.SUCCESS"
+              (clickAction)="addSkill(i)"
+            ></app-button>
+          </div>
+        </div>
+        <div class="pt-6">
+          <app-button
+            label="Remove person"
+            [type]="ButtonType.ERROR"
+            (clickAction)="removePerson(i)"
+          ></app-button>
+        </div>
+      </div>
+    </div>
+    <div modal-footer class="flex items-center justify-end gap-2 pt-6">
+      <app-button
+        label="Add person"
+        [type]="ButtonType.PRIMARY"
+        (clickAction)="addPerson()"
+      ></app-button>
+      <button
+        class="text-white bg-custom-purple font-medium rounded-lg text-sm p-2 text-center disabled:bg-slate-400"
+        type="submit"
+        [disabled]="taskForm.invalid"
+      >
+        Save task
+      </button>
+    </div>
+  </form>
+</app-modal>

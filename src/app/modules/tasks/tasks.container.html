@@ -1,0 +1,11 @@
+<div class="grid gap-2">
+  <app-filter-tasks
+    (selectedFilters)="onSelectedFilters($event)"
+    (toggleModalCreateTask)="toggleModalCreateTask()"
+  ></app-filter-tasks>
+  <app-list-tasks (completeTask)="onCompleteTask($event)"></app-list-tasks>
+  <app-create-task
+    [isOpenModalCreateTask]="isOpenModalCreateTask"
+    (toggleModalCreateTask)="toggleModalCreateTask()"
+  ></app-create-task>
+</div>
